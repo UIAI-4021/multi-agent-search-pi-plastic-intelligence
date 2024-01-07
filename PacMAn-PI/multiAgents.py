@@ -3,8 +3,6 @@
 
 
 # import the necessary libraries
-
-
 from game import Directions
 import random
 from util import manhattanDistance, lookup
