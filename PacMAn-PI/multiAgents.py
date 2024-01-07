@@ -1,7 +1,10 @@
 # PacMan AI agent using minimax with alpha beta prunning
 # Implemented by: Mohammad Hassan Heydari, Arian Jafari
 
+
 # import the necessary libraries
+
+
 from game import Directions
 import random
 from util import manhattanDistance, lookup
@@ -19,6 +22,11 @@ class MultiAgentSearchAgent(Agent):
         self.evaluationFunction = lookup(evalFn, globals()) # get the evaluation function
         self.depth = int(depth) # get the depth
         self.time_limit = int(time_limit)  # get the time limit
+
+        self.evaluationFunction = lookup(evalFn, globals())
+        self.depth = int(depth)
+        self.time_limit = int(time_limit)
+
 
     # evaluation function for minimax with alpha beta prunning
     # heuristic is based on the distance of the closest food, the distance of the closest ghost and the number of ghosts in 1 distance
@@ -63,6 +71,7 @@ class AIAgent(MultiAgentSearchAgent):
 
             for s in game_state.getLegalActions(agent): # for each action calculate the value
 
+
                 # calculate the value of the next level
                 value = min(value, a_b_prunning(next_agent, depth, game_state.generateSuccessor(agent, s), alpha, beta))
 
@@ -77,6 +86,16 @@ class AIAgent(MultiAgentSearchAgent):
 
             # return the utility in case the defined depth is reached or the game is won/lost.
             if game_state.isLose() or game_state.isWin() or depth == self.depth:
+
+                value = min(value, a_b_prunning(next_agent, depth, game_state.generateSuccessor(agent, s), alpha, beta)) # calculate the value of the next level
+                if value < alpha: # if the value is smaller than alpha return the value
+                    return value
+                beta = min(beta, value) # update beta
+            return value
+
+        def a_b_prunning(agent, depth, game_state, alpha, beta): # alpha beta prunning function
+            if game_state.isLose() or game_state.isWin() or depth == self.depth:  # return the utility in case the defined depth is reached or the game is won/lost.
+
                 return self.evaluationFunction(game_state)
 
             if agent == 0: # if the agent is pacman
@@ -86,13 +105,17 @@ class AIAgent(MultiAgentSearchAgent):
                 return min_level(agent, depth, game_state, alpha, beta) # return the min level
 
 
+
         utility, alpha , beta = -10e12, -10e12, 10e12 # set the utility, alpha and beta to very small and big numbers respectively
         action = Directions.NORTH # set the action to north
+
+
 
         legal_actions = gameState.getLegalActions(0) # get the legal actions of pacman
         random.shuffle(legal_actions)  # Shuffle the actions to add randomness
 
         for s in legal_actions: # for each action calculate the utility
+
 
             # calculate the utility of the next level
             ghostValue = a_b_prunning(agent = 1,depth =  0, game_state= gameState.generateSuccessor(0, s), alpha = alpha, beta = beta)
@@ -102,6 +125,14 @@ class AIAgent(MultiAgentSearchAgent):
                 utility = ghostValue # update the utility
                 action = s # update the action
 
+            if utility > beta: # if the utility is bigger than beta return the utility
+                return utility
+
+
+            ghostValue = a_b_prunning(agent = 1,depth =  0, game_state= gameState.generateSuccessor(0, s), alpha = alpha, beta = beta) # calculate the utility of the next level
+            if ghostValue > utility: # if the utility is bigger than the previous one update the utility and the action
+                utility = ghostValue # update the utility
+                action = s # update the action
             if utility > beta: # if the utility is bigger than beta return the utility
                 return utility
 
