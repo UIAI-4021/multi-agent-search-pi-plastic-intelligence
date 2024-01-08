@@ -103,8 +103,11 @@ class AIAgent(MultiAgentSearchAgent):
             return value
 
         def min_level(agent, depth, game_state, alpha, beta):  # min_level function
-            # if the game is won/lost or the defined depth is reached return the utility
 
+<<<<<<< Updated upstream
+=======
+
+>>>>>>> Stashed changes
             value = 10e12  # set the value to a very big number
 
             next_agent = agent + 1  # calculate the next agent and increase depth accordingly.
@@ -151,4 +154,8 @@ class AIAgent(MultiAgentSearchAgent):
                 return utility
             alpha = max(alpha, utility)  # update alpha
 
+<<<<<<< Updated upstream
         return action
+=======
+        return action
+>>>>>>> Stashed changes
